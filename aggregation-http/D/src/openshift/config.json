@@ -1,0 +1,4 @@
+{
+  "openshift" : true,
+  "port" : 8080
+}

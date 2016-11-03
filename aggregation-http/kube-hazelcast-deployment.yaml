@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hazelcast
+  namespace: mexample
+  labels:
+    name: hazelcast
+    namespace: mexample
+spec:
+  template:
+    metadata:
+      labels:
+        name: hazelcast
+        namespace: mexample
+    spec:
+      containers:
+      - name: hazelcast
+        image: quay.io/pires/hazelcast-kubernetes:0.6.1
+        imagePullPolicy: Always
+        env:
+        # https://github.com/pires/hazelcast-kubernetes-bootstrapper
+        #- name: "HAZELCAST_SERVICE"
+        #  value: "hazelcast"
+        #- name: "DNS_DOMAIN"
+        #  value: "cluster.local"
+        # default: kube-dns.kube-system.svc.cluster.local
+        - name: "POD_NAMESPACE"
+          value: "mexample"
+        #- name: "HC_GROUP_NAME"
+        #  value: "someGroup"
+        #- name: "HC_GROUP_PASSWORD"
+        #  value: "someSecret"
+        #- name: "HC_PORT"
+        #  value: 5701
+        ports:
+        - name: hazelcast
+          containerPort: 5701

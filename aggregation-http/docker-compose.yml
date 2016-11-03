@@ -1,0 +1,22 @@
+version: '2'
+services:
+  vertx-agg-a:
+    container_name: vertx-agg-a
+    image: vertx-examples/agg-a
+    ports:
+    - "8080:8080"
+  vertx-agg-b:
+    container_name: vertx-agg-b
+    image: vertx-examples/agg-b
+    ports:
+    - "8081:8081"
+  vertx-agg-c:
+    container_name: vertx-agg-c
+    image: vertx-examples/agg-c
+    ports:
+    - "8082:8082"
+  vertx-agg-d:
+    container_name: vertx-agg-d
+    image: vertx-examples/agg-d
+    ports:
+    - "8083:8083"
