@@ -140,47 +140,47 @@ public class A extends AbstractVerticle {
   }
 
   private void getB(Handler<HttpClient> next) {
-    if (clientB != null) {
+    /*if (clientB != null) {
       next.handle(clientB);
-    } else {
+    } else {*/
       HttpEndpoint.getClient(discovery, new JsonObject().put("name", "B"), ar -> {
         clientB = ar.result();
         next.handle(clientB);
       });
-    }
+    /*}*/
   }
 
   private void getC(Handler<HttpClient> next) {
-    if (clientC != null) {
+    /*if (clientC != null) {
       next.handle(clientC);
-    } else {
+    } else {*/
       HttpEndpoint.getClient(discovery, new JsonObject().put("name", "C"), ar -> {
         clientC = ar.result();
         next.handle(clientC);
       });
-    }
+    /*}*/
   }
 
   private void getD(Handler<HttpClient> next) {
-    if (clientD != null) {
+    /*if (clientD != null) {
       next.handle(clientD);
-    } else {
+    } else {*/
       HttpEndpoint.getClient(discovery, new JsonObject().put("name", "D"), ar -> {
         clientD = ar.result();
         next.handle(clientD);
       });
-    }
+    /*}*/
   }
 
   private void getE(Handler<HttpClient> next) {
-    if (clientE != null) {
+    /*if (clientE != null) {
       next.handle(clientE);
-    } else {
+    } else {*/
       HttpEndpoint.getClient(discovery, new JsonObject().put("name", "E"), ar -> {
         clientE = ar.result();
         next.handle(clientE);
       });
-    }
+    /*}*/
   }
 
   private void invoke(String name, HttpClient client, CircuitBreaker circuit, String param, Future<String> future) {
