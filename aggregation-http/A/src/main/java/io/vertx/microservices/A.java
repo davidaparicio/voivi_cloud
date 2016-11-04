@@ -34,7 +34,7 @@ public class A extends AbstractVerticle {
 
     CircuitBreakerOptions options = new CircuitBreakerOptions()
         .setMaxFailures(2)
-        .setTimeout(2000)
+        .setTimeout(15000)
         .setResetTimeout(10000)
         .setFallbackOnFailure(true);
 

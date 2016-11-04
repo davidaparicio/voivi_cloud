@@ -22,7 +22,7 @@ public class MainVerticle extends AbstractVerticle {
 
   @Override
   public void start(Future future) throws Exception {
-    DeploymentOptions options = new DeploymentOptions().setConfig(config());
+    DeploymentOptions options = new DeploymentOptions().setConfig(config()).setWorker(true);
     vertx.deployVerticle(B.class.getName(), options);
     if (!config().getBoolean("openshift", false)) {
       discovery = ServiceDiscovery.create(vertx);

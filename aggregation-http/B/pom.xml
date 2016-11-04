@@ -14,7 +14,25 @@
 
   <properties>
     <main.verticle>io.vertx.microservices.MainVerticle</main.verticle>
+    <StNLP.version>3.6.0</StNLP.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
+
+  <dependencies>
+    <!-- Stanford Dependencies -->
+    <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <version>${StNLP.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <version>${StNLP.version}</version>
+      <classifier>models</classifier>
+    </dependency>
+  </dependencies>
 
   <build>
     <resources>
