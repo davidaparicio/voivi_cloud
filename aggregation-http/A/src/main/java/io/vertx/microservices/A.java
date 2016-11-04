@@ -110,7 +110,7 @@ public class A extends AbstractVerticle {
     Future<String> e = Future.future();
 
     getB(client -> {
-      invoke("B", client, circuitB, param, b);
+      invokeDouble("B", client, circuitB, param, b);
     });
 
     getC(client -> {
@@ -126,6 +126,7 @@ public class A extends AbstractVerticle {
     });
 
     CompositeFuture.all(b, c, d, e).setHandler(ar -> {
+      System.out.println("[WebVerticle] I r");
       JsonObject result = new JsonObject();
       result
           .put("A", "Hello " + param)
@@ -202,6 +203,29 @@ public class A extends AbstractVerticle {
           if (!future.isComplete()) future.complete("No service available (fallback)");
           return null;
         }
+    );
+  }
+
+  private void invokeDouble(String name, HttpClient client, CircuitBreaker circuit, String param, Future<String> future) {
+    circuit.executeWithFallback(
+            circuitFuture -> {
+              if (client == null) {
+                circuitFuture.fail("No service available");
+              } else {
+                client.get("/?name=" + param, response -> {
+                  response.bodyHandler(buffer -> {
+                    future.complete(buffer.toJsonObject().getDouble(name).toString());
+                    circuitFuture.complete();
+                  });
+                }).exceptionHandler(circuitFuture::fail)
+                        .end();
+              }
+            },
+            v -> {
+              // the future has already been completed, a failure or timeout.
+              if (!future.isComplete()) future.complete("No service available (fallback)");
+              return null;
+            }
     );
   }
 
