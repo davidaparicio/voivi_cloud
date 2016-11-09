@@ -110,11 +110,11 @@ public class A extends AbstractVerticle {
     Future<String> e = Future.future();
 
     getB(client -> {
-      invokeDouble("B", client, circuitB, param, b);
+      invokeSentiment("B", client, circuitB, param, b);
     });
 
     getC(client -> {
-      invoke("C", client, circuitC, param, c);
+      invokeSubject("C", client, circuitC, param, c);
     });
 
     getD(client -> {
@@ -206,7 +206,7 @@ public class A extends AbstractVerticle {
     );
   }
 
-  private void invokeDouble(String name, HttpClient client, CircuitBreaker circuit, String param, Future<String> future) {
+  private void invokeSentiment(String name, HttpClient client, CircuitBreaker circuit, String param, Future<String> future) {
     circuit.executeWithFallback(
             circuitFuture -> {
               if (client == null) {
@@ -228,6 +228,30 @@ public class A extends AbstractVerticle {
             }
     );
   }
+
+  private void invokeSubject(String name, HttpClient client, CircuitBreaker circuit, String param, Future<String> future) {
+    circuit.executeWithFallback(
+            circuitFuture -> {
+              if (client == null) {
+                circuitFuture.fail("No service available");
+              } else {
+                client.get("/?name=" + param, response -> {
+                  response.bodyHandler(buffer -> {
+                    future.complete(buffer.toJsonObject().getJsonObject(name).toString());
+                    circuitFuture.complete();
+                  });
+                }).exceptionHandler(circuitFuture::fail)
+                        .end();
+              }
+            },
+            v -> {
+              // the future has already been completed, a failure or timeout.
+              if (!future.isComplete()) future.complete("No service available (fallback)");
+              return null;
+            }
+    );
+  }
+
 
   private void setupSockJsBridge(Router router) {
     SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
