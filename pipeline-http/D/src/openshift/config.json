@@ -1,5 +1,0 @@
-{
-  "openshift": true,
-  "namespace": "vertx-microservice-example-pipeline-http",
-  "port" : 8080
-}

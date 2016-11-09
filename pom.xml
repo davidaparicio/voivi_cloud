@@ -19,7 +19,6 @@
   </properties>
 
   <modules>
-    <module>pipeline-http</module>
     <module>aggregation-http</module>
   </modules>
 
