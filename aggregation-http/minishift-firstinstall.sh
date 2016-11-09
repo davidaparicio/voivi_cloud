@@ -1,5 +1,7 @@
 #!/bin/bash
-minishift start --deploy-registry --deploy-router --vm-driver=virtualbox --cpus=2
+minishift start --deploy-registry --deploy-router \
+                --vm-driver=virtualbox --cpus=2 \
+                --disk-size=80g
 echo "If you want to use the Docker inside the minishift"
 echo "Run: eval $(minishift docker-env)"
 

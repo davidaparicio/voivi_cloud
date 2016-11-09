@@ -129,7 +129,7 @@ public class A extends AbstractVerticle {
       System.out.println("[WebVerticle] I r");
       JsonObject result = new JsonObject();
       result
-          .put("A", "Hello " + param)
+          .put("A", param)
           .put("B", b.result())
           .put("C", c.result())
           .put("D", d.result())

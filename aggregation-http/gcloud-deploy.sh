@@ -1,6 +1,6 @@
 #!/bin/bash
 export CONTAINER_VER="latest"
-export CLOUDCONT_VER="v15"
+export CLOUDCONT_VER="v16"
 export GREPO="eu.gcr.io"
 
 echo "Starting deployment"
