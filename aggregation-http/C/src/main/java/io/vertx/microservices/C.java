@@ -12,6 +12,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
@@ -25,12 +26,12 @@ import java.util.Properties;
 public class C extends AbstractVerticle {
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(C.class);
   private static StanfordCoreNLP pipeline;
+  private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
+  private String hostname = "Unknown";
 
   @Override
   public void start() throws Exception {
     init();
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
-    String hostname = "Unknown";
     try
     {
       InetAddress addr;
@@ -41,30 +42,24 @@ public class C extends AbstractVerticle {
     {
       hostname = "localhost";
     }
-    String finalHostname = hostname;
-
     Router router = Router.router(vertx);
-
-    router.get("/").handler(context -> {
+    router.get("/").handler(this::getREST);
+    vertx.eventBus().consumer("c", message -> {
       Date start = Calendar.getInstance().getTime();
-      String param = context.request().getParam("name");
-      vertx.eventBus().publish("monitoring",
-              new JsonObject()
-                      .put("message", "Message received")
-                      .put("from", finalHostname + "| " + Thread.currentThread().getName()));
-      Triple tripleParam = findSubject(param);
+      System.out.println("I have received a message: " + message.body());
+      JsonObject jsonMessage = (JsonObject) message.body();
+      String sentence = jsonMessage.getString("sentence");
+      Triple tripleParam = findSubject(sentence);
       Date end = Calendar.getInstance().getTime();
-      context.response()
-          .putHeader("content-type", "application/json")
-          .end(new JsonObject()
-                  .put("C", new JsonObject()
-                    .put("subject", tripleParam.first())
-                    .put("verb", tripleParam.second())
-                    .put("object", tripleParam.third())
-                  )
-                  .put("from", finalHostname + "| " + Thread.currentThread().getName())
-                  .put("duration", end.getTime() - start.getTime() +"ms")
-                  .encodePrettily());
+      message.reply(new JsonObject()
+              .put("C", new JsonObject()
+                      .put("subject", tripleParam.first())
+                      .put("verb", tripleParam.second())
+                      .put("object", tripleParam.third())
+              )
+              .put("from", hostname + "| " + Thread.currentThread().getName())
+              .put("duration", end.getTime() - start.getTime() +"ms")
+      );
     });
 
     vertx.setPeriodic(10000, handler -> {
@@ -78,6 +73,28 @@ public class C extends AbstractVerticle {
     vertx.createHttpServer()
         .requestHandler(router::accept)
         .listen(config().getInteger("port"));
+  }
+
+  private void getREST(RoutingContext routingContext) {
+    Date start = Calendar.getInstance().getTime();
+    String param = routingContext.request().getParam("name");
+    vertx.eventBus().publish("monitoring",
+            new JsonObject()
+                    .put("message", "Message received")
+                    .put("from", hostname + "| " + Thread.currentThread().getName()));
+    Triple tripleParam = findSubject(param);
+    Date end = Calendar.getInstance().getTime();
+    routingContext.response()
+            .putHeader("content-type", "application/json")
+            .end(new JsonObject()
+                    .put("C", new JsonObject()
+                            .put("subject", tripleParam.first())
+                            .put("verb", tripleParam.second())
+                            .put("object", tripleParam.third())
+                    )
+                    .put("from", hostname + "| " + Thread.currentThread().getName())
+                    .put("duration", end.getTime() - start.getTime() +"ms")
+                    .encodePrettily());
   }
 
   public static void init() {
