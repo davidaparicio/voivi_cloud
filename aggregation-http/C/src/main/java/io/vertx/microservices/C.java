@@ -32,69 +32,48 @@ public class C extends AbstractVerticle {
   @Override
   public void start() throws Exception {
     init();
-    try
-    {
-      InetAddress addr;
-      addr = InetAddress.getLocalHost();
-      hostname = addr.getHostName() + " ("+ addr.getHostAddress() + ") ";
-    }
-    catch (UnknownHostException ex)
-    {
+    try { InetAddress addr; addr = InetAddress.getLocalHost();
+      hostname = addr.getHostName() + " (" + addr.getHostAddress() + ") ";
+    } catch (UnknownHostException ex) {
       hostname = "localhost";
     }
     Router router = Router.router(vertx);
     router.get("/").handler(this::getREST);
     vertx.eventBus().consumer("c", message -> {
-      Date start = Calendar.getInstance().getTime();
-      System.out.println("I have received a message: " + message.body());
       JsonObject jsonMessage = (JsonObject) message.body();
       String sentence = jsonMessage.getString("sentence");
-      Triple tripleParam = findSubject(sentence);
-      Date end = Calendar.getInstance().getTime();
-      message.reply(new JsonObject()
-              .put("C", new JsonObject()
-                      .put("subject", tripleParam.first())
-                      .put("verb", tripleParam.second())
-                      .put("object", tripleParam.third())
-              )
-              .put("from", hostname + "| " + Thread.currentThread().getName())
-              .put("duration", end.getTime() - start.getTime() +"ms")
-      );
+      message.reply(doJob(sentence));
     });
 
-    vertx.setPeriodic(10000, handler -> {
-      System.out.println("[C] handler");
-      vertx.eventBus().publish("monitoring",
-              new JsonObject()
-                      .put("message", "Hello from Java")
-                      .put("from", "C"));
+    vertx.setPeriodic(10000, handler -> {System.out.println("[C] handler");
+      vertx.eventBus().publish("monitoring", new JsonObject().put("message", "Hello from Java").put("from", "C"));
     });
-
     vertx.createHttpServer()
-        .requestHandler(router::accept)
-        .listen(config().getInteger("port"));
+            .requestHandler(router::accept)
+            .listen(config().getInteger("port"));
   }
 
-  private void getREST(RoutingContext routingContext) {
+  private JsonObject doJob(String sentence) {
+    System.out.println("I have received a message: " + sentence);
     Date start = Calendar.getInstance().getTime();
-    String param = routingContext.request().getParam("name");
-    vertx.eventBus().publish("monitoring",
-            new JsonObject()
-                    .put("message", "Message received")
-                    .put("from", hostname + "| " + Thread.currentThread().getName()));
-    Triple tripleParam = findSubject(param);
+    Triple tripleParam = findSubject(sentence);
     Date end = Calendar.getInstance().getTime();
+    return new JsonObject()
+            .put("C", new JsonObject()
+                    .put("subject", tripleParam.first())
+                    .put("verb", tripleParam.second())
+                    .put("object", tripleParam.third())
+            )
+            .put("from", hostname + "| " + Thread.currentThread().getName())
+            .put("duration", end.getTime() - start.getTime() + "ms");
+  }
+
+
+  private void getREST(RoutingContext routingContext) {
+    String paramREST = routingContext.request().getParam("name");
     routingContext.response()
             .putHeader("content-type", "application/json")
-            .end(new JsonObject()
-                    .put("C", new JsonObject()
-                            .put("subject", tripleParam.first())
-                            .put("verb", tripleParam.second())
-                            .put("object", tripleParam.third())
-                    )
-                    .put("from", hostname + "| " + Thread.currentThread().getName())
-                    .put("duration", end.getTime() - start.getTime() +"ms")
-                    .encodePrettily());
+            .end(doJob(paramREST).encodePrettily());
   }
 
   public static void init() {

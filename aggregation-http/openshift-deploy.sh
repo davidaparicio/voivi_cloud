@@ -3,13 +3,13 @@
 #http://kubernetes.io/docs/admin/networking/
 cd A
 mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
-cd ../B
-mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
-cd ../C
-mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
 cd ../D
 mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
 cd ../E
+mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
+cd ../B
+mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
+cd ../C
 mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
 
 # minishift start --deploy-registry --deploy-router
