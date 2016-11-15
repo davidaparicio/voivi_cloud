@@ -1,19 +1,20 @@
 package io.vertx.microservices;
 
-import edu.stanford.nlp.ie.util.RelationTriple;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.util.CoreMap;
-import edu.stanford.nlp.util.PropertiesUtils;
-import edu.stanford.nlp.util.Triple;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.LoggerFactory;
+
+/*import edu.stanford.nlp.ie.util.RelationTriple;
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import edu.stanford.nlp.util.CoreMap;
+import edu.stanford.nlp.util.PropertiesUtils;
+import edu.stanford.nlp.util.Triple;*/
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,13 +26,13 @@ import java.util.Properties;
 
 public class C extends AbstractVerticle {
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(C.class);
-  private static StanfordCoreNLP pipeline;
+  //private static StanfordCoreNLP pipeline;
   private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
   private String hostname = "Unknown";
 
   @Override
   public void start() throws Exception {
-    init();
+    //init();
     try { InetAddress addr; addr = InetAddress.getLocalHost();
       hostname = addr.getHostName() + " (" + addr.getHostAddress() + ") ";
     } catch (UnknownHostException ex) {
@@ -56,13 +57,13 @@ public class C extends AbstractVerticle {
   private JsonObject doJob(String sentence) {
     System.out.println("I have received a message: " + sentence);
     Date start = Calendar.getInstance().getTime();
-    Triple tripleParam = findSubject(sentence);
+    //Triple tripleParam = findSubject(sentence);
     Date end = Calendar.getInstance().getTime();
     return new JsonObject()
             .put("C", new JsonObject()
-                    .put("subject", tripleParam.first())
-                    .put("verb", tripleParam.second())
-                    .put("object", tripleParam.third())
+                    .put("subject", "*")//tripleParam.first())
+                    .put("verb", "*")//tripleParam.second())
+                    .put("object", "*")//tripleParam.third())
             )
             .put("from", hostname + "| " + Thread.currentThread().getName())
             .put("duration", end.getTime() - start.getTime() + "ms");
@@ -76,7 +77,7 @@ public class C extends AbstractVerticle {
             .end(doJob(paramREST).encodePrettily());
   }
 
-  public static void init() {
+  /*public static void init() {
     // Create the Stanford CoreNLP pipeline
     Properties props = PropertiesUtils.asProperties("annotators", "tokenize,ssplit,pos,lemma,depparse,natlog,openie");
     pipeline = new StanfordCoreNLP(props); //process the pipeline
@@ -110,6 +111,6 @@ public class C extends AbstractVerticle {
       }
     }
     return subjectTriple;
-  }
+  }*/
 
 }

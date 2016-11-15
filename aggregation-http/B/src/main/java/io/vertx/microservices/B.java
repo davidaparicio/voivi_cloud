@@ -6,14 +6,14 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.LoggerFactory;
 
-import edu.stanford.nlp.ling.CoreAnnotations;
+/*import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.util.CoreMap;
-import edu.stanford.nlp.util.PropertiesUtils;
+import edu.stanford.nlp.util.PropertiesUtils;*/
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -21,16 +21,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Random;
 
 public class B extends AbstractVerticle {
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(B.class);
-  private static StanfordCoreNLP pipeline;
+  //private static StanfordCoreNLP pipeline;
   private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
   private String hostname = "Unknown";
 
   @Override
   public void start() throws Exception {
-    init();
+    //init();
     try { InetAddress addr; addr = InetAddress.getLocalHost();
       hostname = addr.getHostName() + " (" + addr.getHostAddress() + ") ";
     } catch (UnknownHostException ex) {
@@ -55,7 +56,8 @@ public class B extends AbstractVerticle {
   private JsonObject doJob(String sentence) {
     System.out.println("I have received a message: " + sentence);
     Date start = Calendar.getInstance().getTime();
-    double sentimentParam = findSentiment(sentence);
+    Random randomGenerator = new Random(); double sentimentParam = randomGenerator.nextInt(5);
+    //double sentimentParam = findSentiment(sentence);
     Date end = Calendar.getInstance().getTime();
     return new JsonObject()
       .put("sentiment", sentimentParam)
@@ -70,7 +72,7 @@ public class B extends AbstractVerticle {
             .end(doJob(paramREST).encodePrettily());
   }
 
-  private void init() {
+  /*private void init() {
     // Create the Stanford CoreNLP pipeline
     Properties props = PropertiesUtils.asProperties("annotators", "tokenize, ssplit, parse, sentiment");
     pipeline = new StanfordCoreNLP(props); //process the pipeline
@@ -95,6 +97,6 @@ public class B extends AbstractVerticle {
       }
     }
     return mainSentiment;
-  }
+  }*/
 
 }
