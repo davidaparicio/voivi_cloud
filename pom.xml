@@ -116,9 +116,7 @@
                       </exec>
                     </entryPoint>
                     <runCmds>
-                      <!-- todo this should be cleaned -->
-                      <runcmd>chmod -R 777 /opt</runcmd>
-                      <runcmd>chmod -R 777 /opt/*</runcmd>
+                      <runcmd>chmod -R 777 /opt &amp;&amp; chmod -R 777 /opt/*</runcmd>
                     </runCmds>
                     <assembly>
                       <basedir>/</basedir>
