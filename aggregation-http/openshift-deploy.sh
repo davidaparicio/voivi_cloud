@@ -1,6 +1,14 @@
 #!/bin/bash
 #DOCKER_OPTS="--bridge=cbr0 --iptables=false --ip-masq=false"
 #http://kubernetes.io/docs/admin/networking/
+
+echo "Scaling down all the Replication controller..."
+oc scale rc aggregation-http-a --replicas=0
+oc scale rc aggregation-http-b --replicas=0
+oc scale rc aggregation-http-c --replicas=0
+oc scale rc aggregation-http-d --replicas=0
+oc scale rc aggregation-http-e --replicas=0
+echo "Creation of the lastest image..."
 cd A
 mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
 cd ../D
@@ -11,6 +19,7 @@ cd ../B
 mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
 cd ../C
 mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
+echo "Update finished"
 
 # minishift start --deploy-registry --deploy-router
 # minishift ip
