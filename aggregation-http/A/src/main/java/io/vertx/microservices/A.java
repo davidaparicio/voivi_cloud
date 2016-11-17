@@ -22,13 +22,13 @@ import org.slf4j.LoggerFactory;
 
 public class A extends AbstractVerticle {
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(A.class);
-  private ServiceDiscovery discovery;
+  //private ServiceDiscovery discovery;
 
   @Override
   public void start() throws Exception {
     Router router = Router.router(vertx);
-    discovery = ServiceDiscovery.create(vertx);
-    ServiceDiscoveryRestEndpoint.create(router, discovery);
+    //discovery = ServiceDiscovery.create(vertx);
+    //ServiceDiscoveryRestEndpoint.create(router, discovery);
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
     router.get("/A").handler(this::hello);

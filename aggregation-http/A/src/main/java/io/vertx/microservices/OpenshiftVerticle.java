@@ -9,17 +9,17 @@ import io.vertx.servicediscovery.kubernetes.KubernetesServiceImporter;
  */
 public class OpenshiftVerticle extends AbstractVerticle {
 
-  private ServiceDiscovery discovery;
+  //private ServiceDiscovery discovery;
 
   @Override
   public void start() throws Exception {
-    discovery = ServiceDiscovery
+    /*discovery = ServiceDiscovery
         .create(vertx)
-        .registerServiceImporter(new KubernetesServiceImporter(), config());
+        .registerServiceImporter(new KubernetesServiceImporter(), config());*/
   }
 
   @Override
   public void stop() throws Exception {
-    discovery.close();
+    //discovery.close();
   }
 }

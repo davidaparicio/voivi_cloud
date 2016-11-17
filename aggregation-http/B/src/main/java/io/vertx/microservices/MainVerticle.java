@@ -17,34 +17,34 @@ public class MainVerticle extends AbstractVerticle {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticle.class.getName());
 
-  private Record record;
-  private ServiceDiscovery discovery;
+  //private Record record;
+  //private ServiceDiscovery discovery;
 
   @Override
   public void start(Future future) throws Exception {
     DeploymentOptions options = new DeploymentOptions().setConfig(config()).setWorker(true);
     vertx.deployVerticle(B.class.getName(), options);
-    if (!config().getBoolean("openshift", false)) {
+    /*if (!config().getBoolean("openshift", false)) {
       discovery = ServiceDiscovery.create(vertx);
       publishService(future, discovery, "B");
-    } else {
+    } else {*/
       future.complete();
-    }
+    //}
   }
 
   @Override
   public void stop(Future future) throws Exception {
-    if (discovery != null && record != null) {
+    /*if (discovery != null && record != null) {
       discovery.unpublish(record.getRegistration(), ar -> {
         LOGGER.info("B has been un-published");
         future.complete();
       });
-    } else {
+    } else {*/
       future.complete();
-    }
+    //}
   }
 
-  private void publishService(Future future, ServiceDiscovery discovery, String name) {
+  /*private void publishService(Future future, ServiceDiscovery discovery, String name) {
     String myCurrentIp = "";
     try {
       myCurrentIp = InetAddress.getLocalHost().getHostAddress();
@@ -63,5 +63,5 @@ public class MainVerticle extends AbstractVerticle {
               }
       );
     }
-  }
+  }*/
 }
