@@ -13,6 +13,8 @@
   <properties>
     <vertx.version>3.3.3</vertx.version>
     <slf4j.version>1.7.21</slf4j.version>
+    <mvnco.version>3.6.0</mvnco.version>
+    <dockm.version>0.18.1</dockm.version>
     <hazelcast.version>3.7.2</hazelcast.version>
     <jclouds.version>1.9.2</jclouds.version>
     <hazelcast-kubernetes-version>0.9.3</hazelcast-kubernetes-version>
@@ -43,7 +45,7 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-circuit-breaker</artifactId>
       <version>${vertx.version}</version>
@@ -52,7 +54,7 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-service-discovery</artifactId>
       <version>${vertx.version}</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-hazelcast</artifactId>
@@ -65,7 +67,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5</version>
+        <version>${mvnco.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -87,7 +89,7 @@
           <plugin>
             <groupId>io.fabric8</groupId>
             <artifactId>docker-maven-plugin</artifactId>
-            <version>0.14.2</version>
+            <version>${dockm.version}</version>
             <configuration>
               <images>
                 <image>
