@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: issuer
+  namespace: mexample
+  labels:
+    name: issuer
+    namespace: mexample
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: issuer
+        namespace: mexample
+    spec:
+      containers:
+      - name: issuer
+        image: eu.gcr.io/massive-plasma-161616/issuer:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080

@@ -22,6 +22,7 @@
 
   <modules>
     <module>aggregation-http</module>
+    <module>receiver-issuer</module>
   </modules>
 
   <dependencyManagement>
