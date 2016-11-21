@@ -77,7 +77,7 @@ public class A extends AbstractVerticle {
   private void sendSentence(String serviceName, Future future, String rawObject) {
     vertx.eventBus().send(serviceName, new JsonObject().put("sentence", rawObject), /*new DeliveryOptions().setSendTimeout(10000),*/ reply -> {
       if (reply.succeeded()) {System.out.println("[WebVerticle] Received from " + serviceName + ":\n" + reply.result().body());
-        future.complete(reply.result().body().toString().replace('\\', ' '));
+        future.complete(reply.result().body().toString());
       } else {System.out.println("[WebVerticle] ERROR from " + serviceName +  reply.cause());
         future.fail(reply.cause());
       }
