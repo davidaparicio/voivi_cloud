@@ -65,6 +65,8 @@
     <module>C</module>
     <module>D</module>
     <module>E</module>
+    <module>issuer</module>
+    <module>receiver</module>
   </modules>
 
 </project>

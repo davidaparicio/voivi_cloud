@@ -22,7 +22,6 @@
 
   <modules>
     <module>aggregation-http</module>
-    <module>receiver-issuer</module>
   </modules>
 
   <dependencyManagement>
@@ -81,7 +80,7 @@
     <profile>
       <id>openshift</id>
       <properties>
-        <docker.group.name>vertx-microservices-example</docker.group.name>
+        <docker.group.name>voivi</docker.group.name>
         <docker.image>${docker.group.name}/${project.artifactId}:${project.version}</docker.image>
         <fabric8.dockerUser>fabric8/</fabric8.dockerUser>
       </properties>

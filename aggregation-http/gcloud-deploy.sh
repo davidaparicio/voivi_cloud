@@ -4,11 +4,11 @@ export CLOUDCONT_VER="v22"
 export GREPO="eu.gcr.io"
 
 echo "Starting deployment"
-docker tag vertx-microservices-example/aggregation-http-a:$CONTAINER_VER $GREPO/$PROJECT_ID/a:$CLOUDCONT_VER
-docker tag vertx-microservices-example/aggregation-http-b:$CONTAINER_VER $GREPO/$PROJECT_ID/b:$CLOUDCONT_VER
-docker tag vertx-microservices-example/aggregation-http-c:$CONTAINER_VER $GREPO/$PROJECT_ID/c:$CLOUDCONT_VER
-docker tag vertx-microservices-example/aggregation-http-d:$CONTAINER_VER $GREPO/$PROJECT_ID/d:$CLOUDCONT_VER
-docker tag vertx-microservices-example/aggregation-http-e:$CONTAINER_VER $GREPO/$PROJECT_ID/e:$CLOUDCONT_VER
+docker tag voivi/aggregation-http-a:$CONTAINER_VER $GREPO/$PROJECT_ID/a:$CLOUDCONT_VER
+docker tag voivi/aggregation-http-b:$CONTAINER_VER $GREPO/$PROJECT_ID/b:$CLOUDCONT_VER
+docker tag voivi/aggregation-http-c:$CONTAINER_VER $GREPO/$PROJECT_ID/c:$CLOUDCONT_VER
+docker tag voivi/aggregation-http-d:$CONTAINER_VER $GREPO/$PROJECT_ID/d:$CLOUDCONT_VER
+docker tag voivi/aggregation-http-e:$CONTAINER_VER $GREPO/$PROJECT_ID/e:$CLOUDCONT_VER
 gcloud docker push $GREPO/$PROJECT_ID/a:$CLOUDCONT_VER
 gcloud docker push $GREPO/$PROJECT_ID/b:$CLOUDCONT_VER
 gcloud docker push $GREPO/$PROJECT_ID/c:$CLOUDCONT_VER
