@@ -2,6 +2,7 @@ package io.vertx.microservices;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -45,11 +46,26 @@ public class Issuer extends AbstractVerticle {
   private JsonObject doJob(String sentence) {
     System.out.println("I have received a message: " + sentence);
     Date start = Calendar.getInstance().getTime();
+    Future<String> startFuture = Future.future();
+    vertx.createHttpClient().getNow(8080, "130.211.55.5", "/A?name=test", response -> {
+      System.out.println("Received response with status code " + response.statusCode());
+      response.handler(body -> {
+        System.out.println("HTTPResult: " + body.toString());
+        startFuture.complete(body.toString());
+      });
+    });
     Date end = Calendar.getInstance().getTime();
+    Future.succeededFuture(startFuture).setHandler(ar -> {
+      if(ar.succeeded()){
+        System.out.println("OK");
+      }else {
+        System.out.println("NO");
+      }
+    });
     return new JsonObject()
-            .put("Issuer", "Aloha " + sentence)
-            .put("from", hostname + "| " + Thread.currentThread().getName())
-            .put("duration", end.getTime() - start.getTime() + "ms");
+              .put("Issuer", startFuture.result())
+              .put("from", hostname + "| " + Thread.currentThread().getName())
+              .put("duration", end.getTime() - start.getTime() + "ms");
   }
 
   private void getREST(RoutingContext routingContext) {
