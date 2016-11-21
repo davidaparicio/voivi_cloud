@@ -27,7 +27,7 @@ public class Receiver extends AbstractVerticle {
     Router router = Router.router(vertx);
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
-    router.get("/receiver").handler(this::hello);
+    router.get("/").handler(this::hello);
     setupSockJsBridge(router);
 
     vertx.createHttpServer()

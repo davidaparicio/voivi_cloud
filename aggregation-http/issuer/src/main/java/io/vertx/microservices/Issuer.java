@@ -2,13 +2,16 @@ package io.vertx.microservices;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +35,7 @@ public class Issuer extends AbstractVerticle {
     vertx.eventBus().consumer("issuer", message -> {
       JsonObject jsonMessage = (JsonObject) message.body();
       String sentence = jsonMessage.getString("sentence");
-      message.reply(doJob(sentence));
+      doJob(message,sentence);
     });
 
     vertx.setPeriodic(10000, handler -> { System.out.println("[Issuer] handler");
@@ -43,35 +46,39 @@ public class Issuer extends AbstractVerticle {
             .listen(config().getInteger("port"));
   }
 
-  private JsonObject doJob(String sentence) {
-    System.out.println("I have received a message: " + sentence);
-    Date start = Calendar.getInstance().getTime();
-    Future<String> startFuture = Future.future();
-    vertx.createHttpClient().getNow(8080, "130.211.55.5", "/A?name=test", response -> {
-      System.out.println("Received response with status code " + response.statusCode());
-      response.handler(body -> {
-        System.out.println("HTTPResult: " + body.toString());
-        startFuture.complete(body.toString());
+  private void doJob(Message message, String sentence) {
+    try {
+      Date start = Calendar.getInstance().getTime();
+      System.out.println("http://130.211.55.5:8080/?name="+URLEncoder.encode(sentence, "UTF-8"));
+      vertx.createHttpClient().getNow(8080, "130.211.55.5", "/A?name="+URLEncoder.encode(sentence, "UTF-8"), response -> {
+        System.out.println("Received response with status code " + response.statusCode());
+        response.handler(body -> {
+          System.out.println("HTTPResult: " + body.toString());
+          Date end = Calendar.getInstance().getTime();
+          message.reply(new JsonObject().put("Issuer", body.toString().replace("\\", ""))
+                  .put("from", hostname + "| " + Thread.currentThread().getName())
+                  .put("duration", end.getTime() - start.getTime() + "ms"));
+        });
       });
-    });
-    Date end = Calendar.getInstance().getTime();
-    Future.succeededFuture(startFuture).setHandler(ar -> {
-      if(ar.succeeded()){
-        System.out.println("OK");
-      }else {
-        System.out.println("NO");
-      }
-    });
-    return new JsonObject()
-              .put("Issuer", startFuture.result())
-              .put("from", hostname + "| " + Thread.currentThread().getName())
-              .put("duration", end.getTime() - start.getTime() + "ms");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
   }
 
   private void getREST(RoutingContext routingContext) {
     String paramREST = routingContext.request().getParam("name");
     routingContext.response()
             .putHeader("content-type", "application/json")
-            .end(doJob(paramREST).encodePrettily());
+            .end(doJobREST(paramREST).encodePrettily());
   }
+  private JsonObject doJobREST(String sentence) {
+    System.out.println("I have received a message: " + sentence);
+    Date start = Calendar.getInstance().getTime();
+    Date end = Calendar.getInstance().getTime();
+    return new JsonObject()
+            .put("Issuer", "Aloha " + sentence)
+            .put("from", hostname + "| " + Thread.currentThread().getName())
+            .put("duration", end.getTime() - start.getTime() + "ms");
+  }
+
 }

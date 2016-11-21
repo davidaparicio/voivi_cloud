@@ -26,7 +26,7 @@ public class A extends AbstractVerticle {
     //ServiceDiscoveryRestEndpoint.create(router, discovery);
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
-    router.get("/A").handler(this::hello);
+    router.get("/").handler(this::hello);
     setupSockJsBridge(router);
 
     vertx.createHttpServer()
@@ -77,7 +77,7 @@ public class A extends AbstractVerticle {
   private void sendSentence(String serviceName, Future future, String rawObject) {
     vertx.eventBus().send(serviceName, new JsonObject().put("sentence", rawObject), /*new DeliveryOptions().setSendTimeout(10000),*/ reply -> {
       if (reply.succeeded()) {System.out.println("[WebVerticle] Received from " + serviceName + ":\n" + reply.result().body());
-        future.complete(reply.result().body().toString());
+        future.complete(reply.result().body().toString().replace('\\', ' '));
       } else {System.out.println("[WebVerticle] ERROR from " + serviceName +  reply.cause());
         future.fail(reply.cause());
       }
