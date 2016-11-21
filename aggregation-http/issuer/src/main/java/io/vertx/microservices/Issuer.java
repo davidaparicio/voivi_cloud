@@ -50,7 +50,7 @@ public class Issuer extends AbstractVerticle {
     try {
       Date start = Calendar.getInstance().getTime();
       System.out.println("http://130.211.55.5:8080/?name="+URLEncoder.encode(sentence, "UTF-8"));
-      vertx.createHttpClient().getNow(8080, "130.211.55.5", "/A?name="+URLEncoder.encode(sentence, "UTF-8"), response -> {
+      vertx.createHttpClient().getNow(8080, "130.211.55.5", "/?name="+URLEncoder.encode(sentence, "UTF-8"), response -> {
         System.out.println("Received response with status code " + response.statusCode());
         response.handler(body -> {
           System.out.println("HTTPResult: " + body.toString());

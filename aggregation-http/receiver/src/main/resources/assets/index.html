@@ -24,11 +24,8 @@
 
     <div class="row">
         <div class="head col-md-6">
-            <h1>Vert.x Micro-Services Sample - ABCD - Aggregation - HTTP</h1>
-            <p class="lead">In this sample, this page is consuming 1 service using Ajax and print the result below. This service (A) calls 3 services (B, C and D) and builds an aggregated response.
-                Enter a parameter in the text box and click on invoke. You can have a look to the circuit breakers
-                using <a href="/assets/circuits.html">the circuit breaker status page</a>. The available services
-                are listed on <a href="/assets/discovery.html">the discovery page</a>.</p>
+            <h1>Receiver</h1>
+            <p class="lead">Micro-Services Aggregation</p>
         </div>
     </div>
 
@@ -52,7 +49,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 <script>
-    var endpoint_a = "/A";
+    var endpoint_a = "/";
 
     function getName() {
         var val = $("#name").val();
@@ -76,21 +73,21 @@
 </script>
 <script src="libs/sockjs.min.js"></script>
 <script src='libs/vertx-eventbus.js'></script>
-<script>
+<!--script>
     var eb = new EventBus("/eventbus");
     eb.onopen = function () {
         console.log("SockJS bridge opened");
-        eb.registerHandler('monitoring', function (err, msg) {
+        eb.registerHandler('monitor', function (err, msg) {
             if (err){
                 console.error(err)
             }
             //console.log(msg);
             $('#log').prepend('<div>' + msg.body.message + '-' + msg.body.from + '</div>');
         });
-        eb.publish('monitoring', {"message":"EventBus client ready","from":"my browser"});
+        eb.publish('monitor', {"message":"EventBus client ready","from":"my browser"});
         //error_showSnackbar();
         //eb.send('events', {"message":"hello","from":"js"});
     };
-</script>
+</script-->
 </body>
 </html>
