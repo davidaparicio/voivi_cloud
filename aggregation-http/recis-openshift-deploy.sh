@@ -1,4 +1,5 @@
 #!/bin/bash
+./pipeline-openshift.sh
 echo "Scaling down all the Replication controller..."
 oc scale rc receiver --replicas=0
 oc scale rc issuer --replicas=0

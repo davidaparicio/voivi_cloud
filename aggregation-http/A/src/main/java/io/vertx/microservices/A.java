@@ -15,15 +15,26 @@ import io.vertx.ext.web.handler.sockjs.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class A extends AbstractVerticle {
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(A.class);
-  //private ServiceDiscovery discovery;
+  private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
+  private String hostname = "Unknown";
 
   @Override
   public void start() throws Exception {
+    try { InetAddress addr; addr = InetAddress.getLocalHost();
+      hostname = addr.getHostName() + " (" + addr.getHostAddress() + ") ";
+    } catch (UnknownHostException ex) {
+      hostname = "localhost";
+    }
+
     Router router = Router.router(vertx);
-    //discovery = ServiceDiscovery.create(vertx);
-    //ServiceDiscoveryRestEndpoint.create(router, discovery);
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
     router.get("/").handler(this::hello);
@@ -46,6 +57,7 @@ public class A extends AbstractVerticle {
 
   private void hello(RoutingContext context) {
     String paramSentence = context.request().getParam("name");
+    Date start = Calendar.getInstance().getTime();
     Future<String> b = Future.future();
     Future<String> c = Future.future();
     Future<String> d = Future.future();
@@ -63,9 +75,10 @@ public class A extends AbstractVerticle {
         // At least one future failed
         System.out.println("[WebVerticle] I received an incomplete result");
       }
+      Date end = Calendar.getInstance().getTime();
       JsonObject result = new JsonObject();
       result
-              .put("A", paramSentence)
+              .put("A", new JsonObject().put("A", paramSentence).put("from", hostname + "| " + Thread.currentThread().getName()).put("duration", end.getTime() - start.getTime() + "ms"))
               .put("B", resultEventBus(b))
               .put("C", resultEventBus(c))
               .put("D", resultEventBus(d))

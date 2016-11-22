@@ -1,14 +1,14 @@
 #!/bin/bash
 export CONTAINER_VER="latest"
-export CLOUDCONT_VER="v22"
+export CLOUDCONT_VER="gcloud"
 export GREPO="eu.gcr.io"
 
 echo "Starting deployment"
-docker tag voivi/aggregation-http-a:$CONTAINER_VER $GREPO/$PROJECT_ID/a:$CLOUDCONT_VER
-docker tag voivi/aggregation-http-b:$CONTAINER_VER $GREPO/$PROJECT_ID/b:$CLOUDCONT_VER
-docker tag voivi/aggregation-http-c:$CONTAINER_VER $GREPO/$PROJECT_ID/c:$CLOUDCONT_VER
-docker tag voivi/aggregation-http-d:$CONTAINER_VER $GREPO/$PROJECT_ID/d:$CLOUDCONT_VER
-docker tag voivi/aggregation-http-e:$CONTAINER_VER $GREPO/$PROJECT_ID/e:$CLOUDCONT_VER
+docker tag voivi/a:$CONTAINER_VER $GREPO/$PROJECT_ID/a:$CLOUDCONT_VER
+docker tag voivi/b:$CONTAINER_VER $GREPO/$PROJECT_ID/b:$CLOUDCONT_VER
+docker tag voivi/c:$CONTAINER_VER $GREPO/$PROJECT_ID/c:$CLOUDCONT_VER
+docker tag voivi/d:$CONTAINER_VER $GREPO/$PROJECT_ID/d:$CLOUDCONT_VER
+docker tag voivi/e:$CONTAINER_VER $GREPO/$PROJECT_ID/e:$CLOUDCONT_VER
 gcloud docker push $GREPO/$PROJECT_ID/a:$CLOUDCONT_VER
 gcloud docker push $GREPO/$PROJECT_ID/b:$CLOUDCONT_VER
 gcloud docker push $GREPO/$PROJECT_ID/c:$CLOUDCONT_VER

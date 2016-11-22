@@ -15,15 +15,27 @@ import io.vertx.ext.web.handler.sockjs.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 
 public class Receiver extends AbstractVerticle {
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(Receiver.class);
-  //private ServiceDiscovery discovery;
+  private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
+  private String hostname = "Unknown";
 
   @Override
   public void start() throws Exception {
+    try { InetAddress addr; addr = InetAddress.getLocalHost();
+      hostname = addr.getHostName() + " (" + addr.getHostAddress() + ") ";
+    } catch (UnknownHostException ex) {
+      hostname = "localhost";
+    }
+
     Router router = Router.router(vertx);
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
@@ -47,6 +59,7 @@ public class Receiver extends AbstractVerticle {
 
   private void hello(RoutingContext context) {
     String paramSentence = context.request().getParam("name");
+    Date start = Calendar.getInstance().getTime();
     Future<String> issuer = Future.future();
     sendSentence("issuer", issuer, paramSentence);
 
@@ -58,9 +71,10 @@ public class Receiver extends AbstractVerticle {
         // At least one future failed
         System.out.println("[Receiver] I received an incomplete result");
       }
+      Date end = Calendar.getInstance().getTime();
       JsonObject result = new JsonObject();
       result
-              .put("Receiver", paramSentence)
+              .put("Receiver", new JsonObject().put("Receiver", paramSentence).put("from", hostname + "| " + Thread.currentThread().getName()).put("duration", end.getTime() - start.getTime() + "ms"))
               .put("Issuer", resultEventBus(issuer));
       context.response().putHeader("content-type", "application/json").end(result.encodePrettily());
     });
@@ -82,11 +96,7 @@ public class Receiver extends AbstractVerticle {
             .addOutboundPermitted(
                     new PermittedOptions().setAddress("issuer"))
             .addInboundPermitted(
-                    new PermittedOptions().setAddress("issuer"))
-            .addOutboundPermitted(
-                    new PermittedOptions().setAddress("monitoring"))
-            .addInboundPermitted(
-                    new PermittedOptions().setAddress("monitoring"));
+                    new PermittedOptions().setAddress("issuer"));
 
     sockJSHandler.bridge(options);
     router.route("/eventbus/*").handler(sockJSHandler);

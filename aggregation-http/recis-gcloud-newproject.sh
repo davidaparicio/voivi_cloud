@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Creating Deployments"
-kubectl create -f receiver.yaml
-kubectl create -f issuer.yaml
+kubectl create -f kube-receiver-controller.yaml
+kubectl create -f kube-issuer-controller.yaml
 echo "Creating Services"
-kubectl expose -f receiver.yaml --type="LoadBalancer"
-kubectl create -f issuer.yaml
+kubectl expose -f kube-receiver-service.yaml --type="LoadBalancer"
+kubectl create -f kube-issuer-service.yaml

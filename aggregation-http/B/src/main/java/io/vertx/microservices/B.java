@@ -60,9 +60,11 @@ public class B extends AbstractVerticle {
     //double sentimentParam = findSentiment(sentence);
     Date end = Calendar.getInstance().getTime();
     return new JsonObject()
-      .put("sentiment", sentimentParam)
-      .put("from", hostname + "| " + Thread.currentThread().getName())
-      .put("duration", end.getTime() - start.getTime() + "ms");
+            .put("B", new JsonObject()
+                .put("sentiment", sentimentParam)
+            )
+            .put("from", hostname + "| " + Thread.currentThread().getName())
+            .put("duration", end.getTime() - start.getTime() + "ms");
   }
 
   private void getREST(RoutingContext routingContext) {

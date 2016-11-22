@@ -60,11 +60,11 @@
   </dependencies>
 
   <modules>
-    <module>A</module>
-    <module>B</module>
-    <module>C</module>
-    <module>D</module>
-    <module>E</module>
+    <module>a</module>
+    <module>b</module>
+    <module>c</module>
+    <module>d</module>
+    <module>e</module>
     <module>issuer</module>
     <module>receiver</module>
   </modules>

@@ -98,7 +98,6 @@
                     <from>anapsix/alpine-java:jre8</from>
                     <tags>
                       <tag>latest</tag>
-                      <tag>${project.version}</tag>
                     </tags>
                     <ports>
                       <port>8080</port>

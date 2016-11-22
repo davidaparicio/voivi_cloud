@@ -10,7 +10,7 @@
     <version>1.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>aggregation-http-e</artifactId>
+  <artifactId>e</artifactId>
 
   <properties>
     <main.verticle>io.vertx.microservices.MainVerticle</main.verticle>
